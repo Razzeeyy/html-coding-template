@@ -1,6 +1,8 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 
 module.exports = {
     mode: 'development',
@@ -17,7 +19,29 @@ module.exports = {
         new MiniCssExtractPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.handlebars',
-            inject: false
+            inject: false,
+            minify: {
+                collapseBooleanAttributes: true,
+                collapseInlineTagWhitespace: true,
+                collapseWhitespace: true,
+                minifyCSS: true,
+                minifyJS: true,
+                minifyURLs: true,
+                processConditionalComments: true,
+                quoteCharacter: '"',
+                removeAttributeQuotes: false,
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                sortAttributes: true,
+                sortClassName: true
+            }
         })
-    ]
+    ],
+
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({ cache: true, parallel: true }),
+            new OptimizeCSSAssetsPlugin()
+        ]
+    }
 };
